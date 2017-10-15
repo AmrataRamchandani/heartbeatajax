@@ -7,7 +7,9 @@
 
 	include("db.php");
 	$fetchOnlineUsers = mysqli_query($conn,"SELECT * FROM heartbeat");
-             
+	//$prevdate=date_sub(time(),date_interval_create_from_date_string('40 days'));
+	$currenttime=date("d-m-Y H:i:s",time());
+$prevtime=date("Y-m-d H:i:s",strtotime($currenttime) - 30);
 	echo "<table id=mytable border='1'>
 	<tr>
 	<td>ID</td>
@@ -26,9 +28,15 @@
 		echo "<tr>
 		<td>$id</td>
 		<td>$ip</td>
-		<td>$timestmp</td>
-<td>$status</td>
-		</tr>";
+		<td>$timestmp</td>";
+if($timestmp >= $prevtime){
+echo "<td>Online</td>";
+}
+else{
+    echo "<td>Offline</td>";
+}
+
+		echo "</tr>";
 	
  	      }
 
@@ -36,12 +44,7 @@
 
 
 echo "<script>
-
 setInterval(function() {
-var url = 'status.php'; 
-	$.ajax({
-           url: url
-         });
 $( '#mytable' ).load( 'server.php #mytable' );
 }, 3000);
 
